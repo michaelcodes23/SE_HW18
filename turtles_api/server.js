@@ -32,6 +32,9 @@ app.get('/seed',(req,res)=>{
 app.get("/turtles", (req, res) => {
     //res.json let's us send a response as JSON data
     turtleSchema.find({},(error, getData)=>{
+        // res.render('index.ejs',{
+        //     data: getData
+        // })
         res.json({getData})
     })
 })
@@ -39,38 +42,69 @@ app.get("/turtles", (req, res) => {
 //     res.json({turtles})
 // })
 
-//Show Route
+// Show Route
+
+  
 app.get('/turtles/:id', (req,res)=>{
-    turtleSchema.find({},(error, getData)=>{
-        res.json({getData[req.params.id]})
+    turtleSchema.findById(req.params.id,(error, getData)=>{
+        res.json(
+            getData
+        )
     })
 })
 // app.get('/turtles/:index', (req,res)=>{
 //     res.json(turtles[req.params.index])
 // })
 
-//Post route
-app.post('/turtles', (req, res)=>{
-    //push the request body into the array
-    turtles.push(req.body)
-    // send the turtles array as JSON
-    res.json(turtles)
+// //Post route
+app.post('/turtles',(req,res)=>{
+    turtleSchema.find({},(error,getData)=>{
+        getData.push(req.body)
+        res.json({getData})
+    })
 })
+// app.post('/turtles', (req, res)=>{
+//     //push the request body into the array
+//     turtles.push(req.body)
+//     // send the turtles array as JSON
+//     res.json(turtles)
+// })
 
-//Put route
-app.put('/turtles/:index', (req, res)=>{
-    turtles[req.params.index] = req.body
-    //send the turtles array as JSON
-    res.json(turtles)
-})
+// //Put route
+app.put('/turtles/:id',(req,res)=>{
+    turtleSchema.findById(req.params.id,(error,getData)=>{
+        getData = req.body
+        res.json(getData)
+    })
 
-//Delete Route
-app.delete('/turtles/:index', (req, res)=>{
-    //remove the turtle at the specified index
-    turtles.splice(req.params.index, 1)
-    //send the turtles array as JSON
-    res.json(turtles)
 })
+// app.put('/turtles/:index', (req, res)=>{
+//     turtles[req.params.index] = req.body
+//     //send the turtles array as JSON
+//     res.json(turtles)
+// })
+
+// //Delete Route
+app.delete('/turtles/:id', (req,res)=>{
+    turtleSchema.find({},(error,getData)=>{
+        getData.splice(req.params.id, 1)
+        res.json({getData})
+    })
+
+        
+    // })
+        // turtleSchema.findById(req.params.id,(error,getData)=>{
+        //     getData.splice(0,1)
+        //     res.json(getData)
+        // })
+    
+})
+// app.delete('/turtles/:index', (req, res)=>{
+//     //remove the turtle at the specified index
+//     turtles.splice(req.params.index, 1)
+//     //send the turtles array as JSON
+//     res.json(turtles)
+// })
 //Connections
 mongoose.connect('mongodb://localhost:27017/turtle', {useNewUrlParser: true, useUnifiedTopology: true})
 mongoose.connection.once('open', () => {
